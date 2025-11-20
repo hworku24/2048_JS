@@ -1,0 +1,400 @@
+// /* ===== Base layout ===== */
+// body {
+//   margin: 0;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   min-height: 100vh;
+//   background: #fbf8ef;
+//   font-family: sans-serif;
+//   font-size: 24px;
+//   font-weight: 900;
+// }
+
+// /* Needed so we can absolutely-position the side score */
+// .container {
+//   position: relative;
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   width: 350px;
+// }
+
+// /* ===== Board / cells ===== */
+// .field-cell {
+//   background: #d6cdc4;
+//   width: 75px;
+//   height: 75px;
+//   border-radius: 5px;
+//   color: #776e65;
+//   box-sizing: border-box;
+//   text-align: center;
+//   vertical-align: middle;
+//   user-select: none;
+//   font-weight: 700;
+//   line-height: 75px;                 /* perfect vertical centering for numbers */
+//   transition: background 0.2s ease, transform 0.1s ease;
+// }
+
+// .tile-2    { background: #eee4da; }
+// .tile-4    { background: #ede0c8; }
+// .tile-8    { background: #f2b179; color: #f9f6f2; }
+// .tile-16   { background: #f59563; color: #f9f6f2; }
+// .tile-32   { background: #f67c5f; color: #f9f6f2; }
+// .tile-64   { background: #f65e3b; color: #f9f6f2; }
+// .tile-128  { background: #edcf72; color: #f9f6f2; }
+// .tile-256  { background: #edcc61; color: #f9f6f2; }
+// .tile-512  { background: #edc850; color: #f9f6f2; }
+// .tile-1024 { background: #edc53f; color: #f9f6f2; }
+// .tile-2048 { background: #edc22e; color: #f9f6f2; }
+
+// .game-field {
+//   background: #bbada0;
+//   border-spacing: 10px;
+//   border-radius: 5px;
+// }
+
+// /* ===== Header / controls ===== */
+// .game-header {
+//   display: flex;
+//   width: 100%;
+//   justify-content: space-between;
+//   margin-bottom: 24px;
+//   padding: 10px;
+//   box-sizing: border-box;
+// }
+
+// h1 {
+//   background: #edc22e;
+//   color: #f9f6f2;
+//   width: 75px;
+//   height: 75px;
+//   font-size: 24px;
+//   border-radius: 5px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   box-sizing: border-box;
+//   margin: 0;
+// }
+
+// .controls {
+//   display: flex;
+// }
+
+// /* Generic small stat card (used for Best, Score) */
+// .info {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   justify-content: center;
+//   background: #d6cdc4;
+//   width: 75px;
+//   height: 75px;
+//   border-radius: 5px;
+//   color: #776e65;
+//   box-sizing: border-box;
+//   font-size: 16px;
+//   margin: 0 8px 0 0;
+// }
+
+// /* Inputs inside .info cards (for score/best) */
+// .info input {
+//   width: 100%;
+//   border: none;
+//   background: transparent;
+//   color: #776e65;
+//   text-align: center;
+//   font-weight: 900;
+//   font-size: 16px;
+//   outline: none;
+//   padding: 0;
+// }
+
+// /* Slight spacing for the top “Best” box wrapper */
+// .best-wrapper { margin-left: 8px; }
+
+// /* ===== Side score to the left of the grid ===== */
+// .side-score {
+//   position: absolute;
+//   /* sits to the left of the grid; adjust if needed for your layout */
+//   left: -110px;
+//   top: calc(50% - 37.5px);
+//   width: 75px;
+//   height: 75px;
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   justify-content: center;
+// }
+
+// /* ===== Buttons ===== */
+// .button {
+//   border: none;
+//   border-radius: 5px;
+//   cursor: pointer;
+//   color: #f9f6f2;
+//   font-family: sans-serif;
+//   font-weight: 700;
+//   font-size: 16px;
+//   width: 75px;
+//   height: 75px;
+//   transition: 0.25s ease background;
+// }
+
+// .start {
+//   background: #1dae28;
+//   font-size: 20px;
+// }
+// .start:hover { background: #179921; }
+
+// .restart { background: #f1b2b2; }
+// .restart:hover { background: #f87474; }
+
+// /* ===== Messages ===== */
+// .message {
+//   box-sizing: border-box;
+//   width: 100%;
+//   background: #d6cdc4;
+//   color: #776e65;
+//   padding: 10px;
+//   text-align: center;
+//   border-radius: 5px;
+//   font-size: 20px;
+// }
+
+// .message-win {
+//   background: #edc22e;
+//   color: #f9f6f2;
+// }
+
+// .message-container {
+//   width: 100%;
+//   height: 150px;
+// }
+
+// .hidden { display: none; }
+
+/* ===== Scale knobs (adjust here to resize everything proportionally) ===== */
+:root {
+  --cell: 90px;   /* tile size */
+  --gap: 12px;    /* spacing between tiles */
+  --hdr: 84px;    /* header button/card size */
+}
+
+/* ===== Base layout ===== */
+body {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #fbf8ef;
+  font-family: sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+/* Needed so we can absolutely-position the side score */
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: calc(var(--cell) * 4 + var(--gap) * 5);
+}
+
+/* ===== Board / cells ===== */
+.field-cell {
+  background: #d6cdc4;
+  width: var(--cell);
+  height: var(--cell);
+  border-radius: 6px;
+  color: #776e65;
+  box-sizing: border-box;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  font-weight: 700;
+  line-height: var(--cell);
+  font-size: calc(var(--cell) * 0.36);
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.tile-2    { background: #eee4da; }
+.tile-4    { background: #ede0c8; }
+.tile-8    { background: #f2b179; color: #f9f6f2; }
+.tile-16   { background: #f59563; color: #f9f6f2; }
+.tile-32   { background: #f67c5f; color: #f9f6f2; }
+.tile-64   { background: #f65e3b; color: #f9f6f2; }
+.tile-128  { background: #edcf72; color: #f9f6f2; font-size: calc(var(--cell) * 0.32); }
+.tile-256  { background: #edcc61; color: #f9f6f2; font-size: calc(var(--cell) * 0.32); }
+.tile-512  { background: #edc850; color: #f9f6f2; font-size: calc(var(--cell) * 0.30); }
+.tile-1024 { background: #edc53f; color: #f9f6f2; font-size: calc(var(--cell) * 0.28); }
+.tile-2048 { background: #edc22e; color: #f9f6f2; font-size: calc(var(--cell) * 0.28); }
+
+.game-field {
+  background: #bbada0;
+  border-spacing: var(--gap);
+  border-radius: 6px;
+}
+
+/* ===== Header / controls ===== */
+.game-header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding: 10px;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+h1 {
+  background: #edc22e;
+  color: #f9f6f2;
+  width: var(--hdr);
+  height: var(--hdr);
+  font-size: 26px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 16px; /* space between top buttons */
+}
+
+/* Generic small stat card (used for Best, Score) */
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #d6cdc4;
+  width: var(--hdr);
+  height: var(--hdr);
+  border-radius: 6px;
+  color: #776e65;
+  box-sizing: border-box;
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Inputs inside .info cards (for score/best) */
+.info input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: #776e65;
+  text-align: center;
+  font-weight: 900;
+  font-size: 16px;
+  outline: none;
+  padding: 0;
+}
+
+/* Slight spacing for Best wrapper */
+.best-wrapper { margin-left: 0; }
+
+/* ==== Side score: centered next to board + spaced away ==== */
+/* ==== Final side-score alignment ==== */
+.side-score {
+  position: absolute;
+  /* a little gap away from the board */
+  left: calc(-1 * (var(--cell) + var(--gap) + 24px));
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+
+  /* make the card itself tile-sized */
+  width: var(--cell);
+  height: var(--cell);
+  border-radius: 6px;
+  background: #d6cdc4;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.06);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.1; /* keeps label + value nicely stacked */
+}
+
+/* label "Score:" */
+.side-score > span {
+  font-size: 14px;
+  color: #776e65;
+}
+
+/* numeric value (the input we move into the card) */
+.side-score .game-score {
+  margin-top: 4px;
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: #776e65;
+  text-align: center;
+  font-weight: 900;
+  font-size: 16px;
+  outline: none;
+  padding: 0;
+}
+
+/* ===== Buttons ===== */
+.button {
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #f9f6f2;
+  font-family: sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  width: var(--hdr);
+  height: var(--hdr);
+  transition: 0.25s ease background;
+}
+
+.start { background: #1dae28; }
+.start:hover { background: #179921; }
+
+.restart { background: #f1b2b2; }
+.restart:hover { background: #f87474; }
+
+/* ===== Messages ===== */
+.message {
+  box-sizing: border-box;
+  width: 100%;
+  background: #d6cdc4;
+  color: #776e65;
+  padding: 10px;
+  text-align: center;
+  border-radius: 6px;
+  font-size: 20px;
+}
+
+.message-win {
+  background: #edc22e;
+  color: #f9f6f2;
+}
+
+.message-container {
+  width: 100%;
+  height: 150px;
+}
+
+.hidden { display: none; }
+
+/* ===== Responsive downscale for small screens ===== */
+@media (max-width: 540px) {
+  :root {
+    --cell: 84px;
+    --gap: 12px;
+    --hdr: 74px;
+  }
+}
