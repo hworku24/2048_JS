@@ -1,19 +1,26 @@
+
 <!doctype html>
 <html lang="en">
   <head>
+     <!-- Basic page setup -->
     <meta charset="UTF-8" />
+     <!-- Makes layout responsive to different screen sizes -->
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0"
     />
+     <!-- Title shown in the browser tab -->
     <title>2048</title>
+     <!-- Linking the main SCSS stylesheet for styling the game -->
     <link
       rel="stylesheet"
       href="./styles/main.scss"
     /><p class="info">
   </head>
   <body>
+    <!-- Main game container -->
     <div class="container">
+       <!-- Header with title and score -->
       <div class="game-header">
         <h1>2048</h1>
         <div class="controls">
@@ -21,10 +28,12 @@
             Score:
             <span class="game-score">0</span>
           </p>
+           <!-- Start / restart button -->
           <button class="button start">Start</button>
         </div>
       </div>
-
+      
+       <!-- 4x4 game grid -->
       <table class="game-field">
         <tbody>
           <tr class="field-row">
@@ -56,7 +65,7 @@
           </tr>
         </tbody>
       </table>
-
+          <!-- Game messages -->
       <div class="message-container">
         <p class="message message-lose hidden">You lose! Restart the game?</p>
         <p class="message message-win hidden">Winner! Congrats! You did it!</p>
@@ -64,7 +73,9 @@
           Press "Start" to begin game. Good luck!
         </p>
       </div>
+      
     </div>
+     <!-- Game logic/instructions -->
     <script type="module" src="scripts/main.js"></script>
   </body>
 </html>
