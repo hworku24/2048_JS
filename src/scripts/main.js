@@ -3,11 +3,11 @@
 const Game = require('../modules/Game.class');
 const game = new Game();
 
-// HIGH SCORE 
+// HIGH SCORE: This saves and remembers the best score even after refreshing the page
 const BEST_KEY = '2048:bestScore';
 let bestScore = Number(localStorage.getItem(BEST_KEY)) || 0;
 
-// DOM refs
+// Getting important parts of the page (buttons, score, board, messages)
 const els = {
   container: document.querySelector('.container'),
   startBtn: document.querySelector('.button.start'),
@@ -20,7 +20,7 @@ const els = {
   board: document.querySelector('.game-field'),
 };
 
-// Making sure there is a single Restart button 
+// Making sure there only one Restart button 
 let restartBtn = document.querySelector('.button.restart');
 
 if (!restartBtn) {
@@ -37,7 +37,7 @@ if (!restartBtn) {
   }
 }
 
-// Making sure the score is an <input> (not a <span>) 
+// Make sure the score is a text box the game can update
 if (els.scoreEl && els.scoreEl.tagName !== 'INPUT') {
   const input = document.createElement('input');
 
@@ -48,7 +48,7 @@ if (els.scoreEl && els.scoreEl.tagName !== 'INPUT') {
   els.scoreEl = input;
 }
 
-// Fallback if nothing found
+//If score element doesn't exist, create one
 if (!els.scoreEl) {
   els.scoreEl = document.createElement('input');
   els.scoreEl.className = 'game-score';
@@ -56,7 +56,7 @@ if (!els.scoreEl) {
   els.scoreEl.value = '0';
 }
 
-// Turn the TOP gray card into “Best” only
+//Turn the top gray box into a "Best Score" display
 const bestBox = els.controls && els.controls.querySelector('.info');
 let bestInput = document.querySelector('.best-score');
 
@@ -64,8 +64,8 @@ if (bestBox) {
   bestBox.innerHTML = '';
 
   const bestLabel = document.createElement('span');
-
   bestLabel.textContent = 'Best:';
+  
   bestInput = document.createElement('input');
   bestInput.className = 'best-score';
   bestInput.readOnly = true;
@@ -73,7 +73,7 @@ if (bestBox) {
   bestBox.append(bestLabel, bestInput);
 }
 
-// Create (or reuse) one side score card 
+// Keeps only one side score card if more than one exists
 const removeExtras = (nodes) => {
   nodes.forEach((n, i) => {
     if (i > 0) {
@@ -87,13 +87,14 @@ let sideScore = document.querySelector('.side-score');
 // If multiple exist for any reason, keep only the first
 removeExtras(Array.from(document.querySelectorAll('.side-score')));
 
+// Create a side score box if missing
 if (!sideScore && els.container) {
   sideScore = document.createElement('p');
   sideScore.className = 'info side-score';
   els.container.appendChild(sideScore);
 }
 
-// Rebuild the interior of the side-score box exactly once
+// Fill the side score box with label + score
 if (sideScore) {
   sideScore.innerHTML = '';
 
@@ -103,7 +104,7 @@ if (sideScore) {
   sideScore.append(label, els.scoreEl);
 }
 
-// Rendering
+// Draw the game board on the screen
 function renderBoard() {
   const state = game.getState();
 
@@ -111,13 +112,14 @@ function renderBoard() {
     for (let c = 0; c < 4; c++) {
       const cell = els.cells[r * 4 + c];
       const val = state[r][c];
-
+        // Show number if it exists, otherwise leave blank
       cell.textContent = val ? String(val) : '';
       cell.className = 'field-cell' + (val ? ` tile-${val}` : '');
     }
   }
 }
 
+// Shows the correct message (start, win, or lose)
 function renderMessages() {
   const gameStatus = game.getStatus();
 
@@ -146,14 +148,16 @@ function renderMessages() {
   }
 }
 
+// Updates the score display
 function renderScore() {
   const s = game.getScore();
 
   if (els.scoreEl) {
     els.scoreEl.value = String(s); // for Cypress .value checks
-    els.scoreEl.textContent = String(s); // in case someone inspects text
+    els.scoreEl.textContent = String(s);
   }
 
+   // Save new best score if higher
   if (s > bestScore) {
     bestScore = s;
     localStorage.setItem(BEST_KEY, String(bestScore));
@@ -164,13 +168,14 @@ function renderScore() {
   }
 }
 
+// Updates everything on screen
 function renderAll() {
   renderBoard();
   renderScore();
   renderMessages();
 }
 
-// Game actions 
+// Handles arrow key movement
 function handleMove(key) {
   if (game.getStatus() !== 'playing') {
     return;
@@ -191,7 +196,7 @@ function handleMove(key) {
     renderAll();
   }
 }
-
+// Starts the game when Start is clicked
 function startGame() {
   if (game.getStatus() === 'idle') {
     game.start();
@@ -199,10 +204,10 @@ function startGame() {
   renderAll();
 }
 
+// Restarts the game and clears the score
 function restartGame() {
   game.restart();
 
-  // Using Cypress to test code and it is expected for an empty string after restart
   if (els.scoreEl) {
     els.scoreEl.value = '';
     els.scoreEl.textContent = '';
@@ -210,18 +215,18 @@ function restartGame() {
   renderAll();
 }
 
-// Events 
+//Listen for keyboard arrows
 document.addEventListener('keydown', (e) => {
   handleMove(e.key);
 });
-
+// Start button click
 if (els.startBtn) {
   els.startBtn.addEventListener('click', startGame);
 }
-
+// Restart button click
 if (els.restartBtn) {
   els.restartBtn.addEventListener('click', restartGame);
 }
 
-// Initial paint
+//Show the game when page loads
 renderAll();
