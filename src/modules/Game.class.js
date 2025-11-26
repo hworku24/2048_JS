@@ -1,54 +1,58 @@
+
 'use strict';
 
 /**
- * 2048 Game implementation.
- * Status: 'idle' | 'playing' | 'win' | 'lose'
+ * Main class for the 2048 game.
+ * 4 kinds of game status:
+ * 'idle' = not started
+ * 'playing' = currently running
+ * 'win' = player reached 2048
+ * 'lose' = no more moves
  */
 class Game {
-  /**
-   * @param {number[][]} initialState
-   */
   constructor(initialState) {
-    this.size = 4;
-    this.target = 2048;
-    this.score = 0;
-    this.status = 'idle';
+    this.size = 4; // 4x4 grid
+    this.target = 2048;  // number needed to win
+    this.score = 0;  // starting score
+    this.status = 'idle'; // game starts not running
 
+     // Create an empty board
     const empty = this._emptyBoard();
+    // Use saved board if provided, otherwise use empty board
     const given =
       initialState && initialState.length
         ? this._cloneBoard(initialState)
         : empty;
 
-    // Store both working board and a frozen copy for restart()
+    // Store both working board and a frozen copy for restarts
     this.board = this._cloneBoard(given);
     this._initialBoard = this._cloneBoard(given);
   }
 
-  /** ---------------- Public API ---------------- */
 
-  /** @returns {number} */
+
+  // Returns the current score as a number
   getScore() {
     return this.score;
   }
 
-  /** @returns {number[][]} */
+  // Returns the current board layout (where all the tiles are)
   getState() {
     return this._cloneBoard(this.board);
   }
 
-  /** @returns {'idle'|'playing'|'win'|'lose'} */
+//Tells what stage the game is in right now
   getStatus() {
     return this.status;
   }
 
-  /** Starts the game: add up to two tiles and set status to 'playing'. */
+ // Starts the game: Adds two number tiles to the board and changes the game to "playing".
   start() {
     if (this.status !== 'idle') {
       return;
     }
 
-    // Always try to add two tiles (tests expect this even with a custom state)
+     // Add two random tiles to begin
     this._spawnRandomTile();
     this._spawnRandomTile();
 
@@ -56,34 +60,38 @@ class Game {
     this._updateWinLoseStatus();
   }
 
-  /** Resets the game to the initial state (no random tiles). */
+  // Resets the game back to the original empty board. Score goes back to 0 and the game stops.
   restart() {
     this.board = this._cloneBoard(this._initialBoard);
     this.score = 0;
     this.status = 'idle';
   }
 
+  //Move tiles left */
   moveLeft() {
     return this._move('left');
   }
+  //Move tiles right 
   moveRight() {
     return this._move('right');
   }
+  //Move tiles up 
   moveUp() {
     return this._move('up');
   }
+  // Move tiles down
   moveDown() {
     return this._move('down');
   }
 
-  /** ---------------- Internals ---------------- */
-
+ 
+//Handles moving tiles in the given direction and returns true if anything changed on the board.
   _move(direction) {
     if (this.status !== 'playing') {
       return false;
     }
 
-    // Rename 'before' and 'after' to avoid shadowing globals
+    // Save the board before moving so we can compare later
     const prevSerialized = this._serialize(this.board);
 
     if (direction === 'left' || direction === 'right') {
@@ -96,9 +104,11 @@ class Game {
       return false;
     }
 
+     // Check if the board actually changed
     const nextSerialized = this._serialize(this.board);
     const changed = prevSerialized !== nextSerialized;
 
+    // If movement happened, add a new tile and update game status
     if (changed) {
       this._spawnRandomTile();
       this._updateWinLoseStatus();
@@ -107,6 +117,7 @@ class Game {
     return changed;
   }
 
+  //Moves all rows left or right depending on the direction. */
   _moveRows(reverse) {
     for (let r = 0; r < this.size; r++) {
       const row = this.board[r].slice();
@@ -145,7 +156,8 @@ class Game {
 
     return reverse ? compact.slice().reverse() : compact;
   }
-
+//Checks if the player has won or lost and updates the status.
+ */
   _updateWinLoseStatus() {
     if (this._hasReachedTarget()) {
       this.status = 'win';
@@ -159,7 +171,7 @@ class Game {
       this.status = 'playing';
     }
   }
-
+//Checks if the player reached 2048 
   _hasReachedTarget() {
     for (let r = 0; r < this.size; r++) {
       for (let c = 0; c < this.size; c++) {
@@ -172,6 +184,7 @@ class Game {
     return false;
   }
 
+  //Checks if there is at least one empty space on the board
   _hasEmptyCell() {
     for (let r = 0; r < this.size; r++) {
       for (let c = 0; c < this.size; c++) {
@@ -184,8 +197,9 @@ class Game {
     return false;
   }
 
+  // Checks if any tiles can still be merged 
   _hasAnyMergeAvailable() {
-    // horizontal neighbors
+    // check side-by-side tiles
     for (let r = 0; r < this.size; r++) {
       for (let c = 0; c < this.size - 1; c++) {
         if (this.board[r][c] === this.board[r][c + 1]) {
@@ -194,7 +208,7 @@ class Game {
       }
     }
 
-    // vertical neighbors
+    //Check tiles above/below
     for (let cc = 0; cc < this.size; cc++) {
       for (let rr = 0; rr < this.size - 1; rr++) {
         if (this.board[rr][cc] === this.board[rr + 1][cc]) {
@@ -205,7 +219,9 @@ class Game {
 
     return false;
   }
-
+  
+  // Places a new number on a random empty square: mostly adds 2, sometimes adds 4.
+  
   _spawnRandomTile() {
     const empties = [];
 
@@ -223,10 +239,11 @@ class Game {
 
     const [row, col] = empties[Math.floor(Math.random() * empties.length)];
 
-    // 90% chance 2, 10% chance 4 (tests rely on 2 being more common)
+    // 90% chance 2, 10% chance 4 
     this.board[row][col] = Math.random() < 0.9 ? 2 : 4;
   }
 
+  //Flips the board diagonally to make vertical movement work.
   _transpose() {
     const n = this.size;
 
@@ -240,85 +257,20 @@ class Game {
     }
   }
 
+  //Creates a fresh empty board filled with zeros 
   _emptyBoard() {
     return Array.from({ length: this.size }, () => Array(this.size).fill(0));
   }
 
+  // Makes a copy of the board so the original stays safe 
   _cloneBoard(b) {
     return b.map((row) => row.slice());
   }
 
+  // Turns the board into text so we can compare changes
   _serialize(b) {
     return b.map((row) => row.join(',')).join('|');
   }
 }
 
 module.exports = Game;
-
-// 'use strict';
-
-// /**
-//  * This class represents the game.
-//  * Now it has a basic structure, that is needed for testing.
-//  */
-// class Game {
-//   /**
-//    * Creating a new game instance.
-//    *
-//    * @param {number[][]} initialState
-//    * The initial state of the board.
-//    * @default
-//    * [[0, 0, 0, 0],
-//    *  [0, 0, 0, 0],
-//    *  [0, 0, 0, 0],
-//    *  [0, 0, 0, 0]]
-//    *
-//    * If passed, the board will be initialized with the provided
-//    * initial state.
-//    */
-//   constructor(initialState) {
-//     // eslint-disable-next-line no-console
-//     console.log(initialState);
-//   }
-
-//   moveLeft() {}
-//   moveRight() {}
-//   moveUp() {}
-//   moveDown() {}
-
-//   /**
-//    * @returns {number}
-//    */
-//   getScore() {}
-
-//   /**
-//    * @returns {number[][]}
-//    */
-//   getState() {}
-
-//   /**
-//    * Returns the current game status.
-//    *
-//    * @returns {string} One of: 'idle', 'playing', 'win', 'lose'
-//    *
-//    * `idle` - the game has not started yet (the initial state);
-//    * `playing` - the game is in progress;
-//    * `win` - the game is won;
-//    * `lose` - the game is lost
-//    */
-//   getStatus() {}
-
-//   /**
-//    * Starts the game.
-//    */
-//   start() {}
-
-//   /**
-//    * Resets the game.
-//    */
-//   restart() {}
-
-//   // Add your own methods here
-// }
-
-// module.exports = Game;
