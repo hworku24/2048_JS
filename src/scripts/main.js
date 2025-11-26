@@ -3,16 +3,16 @@
 const Game = require('../modules/Game.class');
 const game = new Game();
 
-// ---------- HIGH SCORE ----------
+// HIGH SCORE 
 const BEST_KEY = '2048:bestScore';
 let bestScore = Number(localStorage.getItem(BEST_KEY)) || 0;
 
-// ---------- DOM refs ----------
+// DOM refs
 const els = {
   container: document.querySelector('.container'),
   startBtn: document.querySelector('.button.start'),
   controls: document.querySelector('.controls'),
-  scoreEl: document.querySelector('.game-score'), // may be <span> initially
+  scoreEl: document.querySelector('.game-score'), 
   cells: Array.from(document.querySelectorAll('.field-cell')),
   msgStart: document.querySelector('.message-start'),
   msgWin: document.querySelector('.message-win'),
@@ -20,7 +20,7 @@ const els = {
   board: document.querySelector('.game-field'),
 };
 
-// ---------- Ensure single Restart button ----------
+// Making sure there is a single Restart button 
 let restartBtn = document.querySelector('.button.restart');
 
 if (!restartBtn) {
@@ -37,7 +37,7 @@ if (!restartBtn) {
   }
 }
 
-// ---------- Ensure score is an <input> (not a <span>) ----------
+// Making sure the score is an <input> (not a <span>) 
 if (els.scoreEl && els.scoreEl.tagName !== 'INPUT') {
   const input = document.createElement('input');
 
@@ -56,7 +56,7 @@ if (!els.scoreEl) {
   els.scoreEl.value = '0';
 }
 
-// ---------- Turn the TOP gray card into “Best” ONLY ----------
+// Turn the TOP gray card into “Best” only
 const bestBox = els.controls && els.controls.querySelector('.info');
 let bestInput = document.querySelector('.best-score');
 
@@ -73,7 +73,7 @@ if (bestBox) {
   bestBox.append(bestLabel, bestInput);
 }
 
-// ---------- Create (or reuse) ONE side score card ----------
+// Create (or reuse) one side score card 
 const removeExtras = (nodes) => {
   nodes.forEach((n, i) => {
     if (i > 0) {
@@ -84,7 +84,7 @@ const removeExtras = (nodes) => {
 
 let sideScore = document.querySelector('.side-score');
 
-// if multiple exist for any reason, keep only the first
+// If multiple exist for any reason, keep only the first
 removeExtras(Array.from(document.querySelectorAll('.side-score')));
 
 if (!sideScore && els.container) {
@@ -93,7 +93,7 @@ if (!sideScore && els.container) {
   els.container.appendChild(sideScore);
 }
 
-// rebuild the interior of the side-score box exactly once
+// Rebuild the interior of the side-score box exactly once
 if (sideScore) {
   sideScore.innerHTML = '';
 
@@ -103,7 +103,7 @@ if (sideScore) {
   sideScore.append(label, els.scoreEl);
 }
 
-// ---------- Rendering ----------
+// Rendering
 function renderBoard() {
   const state = game.getState();
 
@@ -170,7 +170,7 @@ function renderAll() {
   renderMessages();
 }
 
-// ---------- Game actions ----------
+// Game actions 
 function handleMove(key) {
   if (game.getStatus() !== 'playing') {
     return;
@@ -202,7 +202,7 @@ function startGame() {
 function restartGame() {
   game.restart();
 
-  // Cypress expects empty string after restart
+  // Using Cypress to test code and it is expected for an empty string after restart
   if (els.scoreEl) {
     els.scoreEl.value = '';
     els.scoreEl.textContent = '';
@@ -210,7 +210,7 @@ function restartGame() {
   renderAll();
 }
 
-// ---------- Events ----------
+// Events 
 document.addEventListener('keydown', (e) => {
   handleMove(e.key);
 });
