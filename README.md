@@ -37,7 +37,7 @@ Clean modular structure separating logic (Game.class.js) from UI (main.js + main
 ├── index.html                 # Root page containing the board and controls
 └── package.json               # Project metadata, dependencies, and build scripts
 
-⚙️ Installation & Running Locally
+ Installation Running Locally ⚙️
 
 Clone the repo:
 
