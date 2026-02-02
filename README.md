@@ -1,7 +1,3 @@
-That “empty last box” happens when there’s an **extra triple backtick** at the very end of your README (or when the whole README is wrapped in something like ` ```md ... ``` `).
-
-**Fix:** don’t wrap the whole thing. Paste this **exactly** (only the file tree + commands are fenced):
-
 # **2048 Game**
 
 A fully functional implementation of the classic **2048** puzzle game built with **JavaScript**, **HTML**, and **SCSS**. The project uses a modular structure, a dynamic rendering pipeline, persistent high-score storage, and a responsive layout that adapts across screen sizes.
