@@ -33,8 +33,8 @@ A fully functional implementation of the classic **2048** puzzle game built with
 ### Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/2048-game.git
-cd 2048-game
+git clone https://github.com/yourusername/2048_JS.git
+cd 2048_JS
 ```
 
 ### Install dependencies
@@ -64,5 +64,5 @@ Open the URL shown in the terminal output (usally: `http://localhost:8080`).
 * Tiles are moved using the arrow keys (↑, ↓, ←, →).
 * Equal tiles merge on contact to form higher values.
 * The primary objective is to create the **2048** tile.
-* When no valid moves remain, the game ends with a **Game Over** message.
-* Reaching **2048** displays a **You Win** banner; play may continue to pursue higher scores.
+* When no valid moves remain, the game ends with a **Game Over** banner.
+* Reaching **2048** displays a **You Win** banner.
