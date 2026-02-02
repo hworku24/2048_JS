@@ -1,9 +1,9 @@
 2048 Game Clone
 
-A fully functional and visually polished clone of the classic 2048 puzzle game built with vanilla JavaScript, HTML, and SCSS.
-This project reimagines the original 2048 with modular JavaScript classes, a dynamic board renderer, local high-score persistence, and an adaptive layout for all screen sizes.
+A fully functional clone of the classic 2048 puzzle game built with JavaScript, HTML, and SCSS.
+This project reimagines the original 2048 with modular JavaScript classes, a dynamic board renderer, local high-score persistence, and an adaptive layout for screens.
 
-🎮 Features
+ Game Features 🎮
 
 Responsive 4x4 game grid built with semantic HTML and styled using SCSS variables.
 
